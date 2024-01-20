@@ -1,20 +1,35 @@
+// ignore_for_file: inference_failure_on_function_invocation
+
 /// [QuranData] is a class that contains the mapping of the Quran
 /// It contains the surah number, ayah number ... etc
 /// of the Quran
 class QuranData {
+  /// Private constructor
+  QuranData._privateConstructor();
+
+  /// Static instance
+  static final QuranData _instance = QuranData._privateConstructor();
+
+  /// Factory constructor to return the same instance
+  static QuranData get instance => _instance;
 
   /// [quranMap] is a map that contains the mapping of the Quran
-  /// 
+  ///
   /// It based on Quran
-  /// 
-  /// key: is separated by a (:) 
-  /// 
+  ///
+  /// key: is separated by a (:)
+  ///
   /// the first part is the surah number
-  /// 
+  ///
   /// the second part is the ayah number
-  /// 
+  ///
   /// value: is the object of the ayah
-  Map<String, dynamic> quranMap = {};
+  Map<String, dynamic> quranMap = {
+    '1:1': {
+      'text': 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+      'sajda': false,
+    },
+  };
 
   /// [pageMap] is a map that contains the mapping of the pages
   ///
@@ -62,7 +77,7 @@ class QuranData {
   /// value: is a verse number
   Map<String, dynamic> sajdaMap = {};
 
-  /// [surahMap] is a map that contains the mapping of the surah
+  /// [suraMap] is a map that contains the mapping of the surah
   ///
   /// It based on Surah
   ///
@@ -70,6 +85,14 @@ class QuranData {
   ///
   /// value: is a map of keys and values
   ///
-  /// values of the sub-map: [id, name, aya, place, arabic]
-  Map<String, dynamic> surahMap = {};
+  /// values of the sub-map: [id, name, aya, page, arabic]
+  Map<String, dynamic> suraMap = {
+    '1': {
+      'id': 1,
+      'name': 'الفاتحة',
+      'aya': 7,
+      'page': 1,
+      'arabic': 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+    },
+  };
 }
