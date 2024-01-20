@@ -27,3 +27,8 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
+bin/
+
+# "JSON to Dart Model" generator tracker files locations.
+/.json_models/
+models.jsonc
