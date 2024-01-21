@@ -6,7 +6,7 @@ class Recitation {
   Recitation({this.id, this.reciterName, this.style, this.translatedName});
 
   factory Recitation.fromJson(Map<String, dynamic> json) => Recitation(
-        id: json['id'] as int?,
+        id: json['id'] as num?,
         reciterName: json['reciter_name'] as String?,
         style: json['style'] as String?,
         translatedName: json['translated_name'] == null
@@ -15,7 +15,7 @@ class Recitation {
                 json['translated_name'] as Map<String, dynamic>,
               ),
       );
-  int? id;
+  num? id;
   String? reciterName;
   String? style;
   TranslatedName? translatedName;

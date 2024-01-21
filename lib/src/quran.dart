@@ -2,8 +2,12 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_quran/src/data/quran_data.dart';
-import 'package:flutter_quran/src/models/audio_model/audio_model.dart';
+import 'package:flutter_quran/src/models/aya_model/aya_model.dart';
 import 'package:flutter_quran/src/models/recitations_model/recitations_model.dart';
+import 'package:flutter_quran/src/models/sora_ayat_model/audio_file.dart';
+import 'package:flutter_quran/src/models/sora_ayat_model/sora_ayat_model.dart';
+import 'package:flutter_quran/src/models/sora_model/sora_model.dart';
+import 'package:flutter_quran/src/models/sour_model/sour_model.dart';
 
 /// [Quran] is a class that contains all the functions
 class Quran {
@@ -44,11 +48,11 @@ class Quran {
     }
   }
 
-  /// [getAyaAudiosModel] is a function that returns aya audio
+  /// [getAyaAudios] is a function that returns aya audio
   /// based on surah number and aya number and recitation id
   /// audio url from quran.com api
   ///
-  static Future<AudioModel> getAyaAudiosModel({
+  static Future<AyaModel> getAyaAudios({
     required int suraNumber,
     required int ayaNumber,
     required int recitationId,
@@ -62,7 +66,7 @@ class Quran {
         'https://api.quran.com/api/v4/recitations/$recitationId/by_ayah/$suraNumber:$ayaNumber',
         options: Options(headers: {'Accept': 'application/json'}),
       );
-      final audioModel = AudioModel.fromJson(data.data as Map<String, dynamic>);
+      final audioModel = AyaModel.fromJson(data.data as Map<String, dynamic>);
       if (audioModel.audioFiles == null || audioModel.audioFiles!.isEmpty) {
         throw Exception('No audio files found');
       }
@@ -88,6 +92,132 @@ class Quran {
       return RecitationsModel.fromJson(data.data as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Error while fetching recitations,\n $e');
+    }
+  }
+
+  /// [getSora] is a function that returns the sora that contains the aya link
+  static Future<SoraModel> getSora({
+    required int soraNumber,
+    required int recitationId,
+  }) async {
+    try {
+      assert(soraNumber > 0 && soraNumber < 115, 'Sora number is not valid');
+      final data = Dio().get(
+        'https://api.quran.com/api/v4/chapter_recitations/$recitationId/$soraNumber',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+      return SoraModel.fromJson((await data).data as Map<String, dynamic>);
+    } catch (e) {
+      throw Exception('Sora number is not valid,\n $e');
+    }
+  }
+
+  /// [getSora] is a function that returns the sora that contains the aya link
+  static Future<SourModel> getAllSourAudios({
+    required int recitationId,
+  }) async {
+    try {
+      final data = Dio().get(
+        'https://api.quran.com/api/v4/chapter_recitations/$recitationId',
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+      return SourModel.fromJson((await data).data as Map<String, dynamic>);
+    } catch (e) {
+      throw Exception('Sora number is not valid,\n $e');
+    }
+  }
+
+  /// [getAyahtAudioListForSpecificPart] is a function that returns the list of
+  /// ayat for specific part of the quran
+  static Future<List<AudioFile>> getAyahtAudioListForSpecificPart({
+    required int recitationId,
+    required int startSurahNumber,
+    required int startAyahNumber,
+    required int endSurahNumber,
+    required int endAyahNumber,
+  }) async {
+    try {
+      final audioFiles = <AudioFile>[];
+      if (startSurahNumber == endSurahNumber) {
+        final soraAyatModel = await _getSoraAyatModel(
+          recitationId: recitationId,
+          surahNumber: startSurahNumber,
+        );
+        audioFiles.addAll(
+          soraAyatModel.audioFiles!.where((element) {
+            final ayahNumber = int.parse(element.verseKey!.split(':').last);
+            if (ayahNumber < startAyahNumber || ayahNumber > endAyahNumber) {
+              return false;
+            }
+            return true;
+          }),
+        );
+      } else {
+        final loopCount = endSurahNumber - startSurahNumber + 1;
+
+        for (var i = 0; i < loopCount; i++) {
+          final soraNumber = startSurahNumber + i;
+          final soraAyatModel = await _getSoraAyatModel(
+            recitationId: recitationId,
+            surahNumber: soraNumber,
+          );
+          if (soraNumber == startSurahNumber) {
+            audioFiles.addAll(
+              soraAyatModel.audioFiles!.where((element) {
+                final ayahNumber = int.parse(element.verseKey!.split(':').last);
+                if (ayahNumber < startAyahNumber) {
+                  return false;
+                }
+                return true;
+              }),
+            );
+          } else if (soraNumber == endSurahNumber) {
+            audioFiles.addAll(
+              soraAyatModel.audioFiles!.where((element) {
+                final ayahNumber = int.parse(element.verseKey!.split(':').last);
+                if (ayahNumber > endAyahNumber) {
+                  return false;
+                }
+                return true;
+              }),
+            );
+          } else {
+            audioFiles.addAll(soraAyatModel.audioFiles!);
+          }
+        }
+      }
+      return audioFiles;
+    } catch (e) {
+      throw Exception('Sora number is not valid,\n $e');
+    }
+  }
+
+  static Future<SoraAyatModel> _getSoraAyatModel({
+    required int recitationId,
+    required int surahNumber,
+  }) async {
+    try {
+      final data = Dio().get(
+        'https://api.quran.com/api/v4/recitations/$recitationId/by_chapter/$surahNumber',
+        options: Options(
+          headers: {'Accept': 'application/json'},
+        ),
+        queryParameters: {
+          'per_page': 300,
+        },
+      );
+      final soraAyatModel =
+          SoraAyatModel.fromJson((await data).data as Map<String, dynamic>);
+      if (soraAyatModel.audioFiles == null ||
+          soraAyatModel.audioFiles!.isEmpty) {
+        throw Exception('No ayat found');
+      }
+      for (final element in soraAyatModel.audioFiles!) {
+        element.url = 'https://audio.qurancdn.com/${element.url}';
+      }
+      return soraAyatModel;
+    } catch (e) {
+      throw Exception('Sora number is not valid,\n $e');
     }
   }
 }
