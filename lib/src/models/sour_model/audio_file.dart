@@ -10,14 +10,14 @@ class AudioFile {
   });
 
   factory AudioFile.fromJson(Map<String, dynamic> json) => AudioFile(
-        id: json['id'] as num?,
-        chapterId: json['chapter_id'] as num?,
+        id: json['id'] as int?,
+        chapterId: json['chapter_id'] as int?,
         fileSize: json['file_size'] as num?,
         format: json['format'] as String?,
         audioUrl: json['audio_url'] as String?,
       );
-  num? id;
-  num? chapterId;
+  int? id;
+  int? chapterId;
   num? fileSize;
   String? format;
   String? audioUrl;
