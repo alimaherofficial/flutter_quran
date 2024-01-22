@@ -32,6 +32,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const QuranView();
+    return const Scaffold(
+      body: Align(
+        alignment: Alignment.center,
+        child: QuranView(),
+      ),
+    );
   }
 }

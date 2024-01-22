@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// [QuranView]
 class QuranView extends StatelessWidget {
@@ -7,6 +7,10 @@ class QuranView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return PageView.builder(
+      itemBuilder: (context, index) {
+        return Container();
+      },
+    );
   }
 }

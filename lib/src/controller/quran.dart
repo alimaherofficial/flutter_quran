@@ -19,10 +19,9 @@ class Quran {
     try {
       assert(suraNumber > 0 && suraNumber < 115, 'Sura number is not valid');
 
-      /// Accessing the singleton instance
-      final quranData = QuranData.instance;
 
-      return (quranData.suraMap[suraNumber.toString()]
+
+      return (QuranData.suraMap[suraNumber.toString()]
           as Map<String, dynamic>)['page'] as int;
     } catch (e) {
       throw Exception('Sura number is not valid,\n $e');
@@ -39,9 +38,7 @@ class Quran {
       assert(suraNumber > 0 && suraNumber < 115, 'Sura number is not valid');
       assert(ayaNumber > 0 && ayaNumber < 287, 'Aya number is not valid');
 
-      /// Accessing the singleton instance
-      final quranData = QuranData.instance;
-      return (quranData.quranMap['$suraNumber:$ayaNumber']
+      return (QuranData.quranMap['$suraNumber:$ayaNumber']
           as Map<String, dynamic>)['text'] as String;
     } catch (e) {
       throw Exception('Sura number or aya number is not valid,\n $e');

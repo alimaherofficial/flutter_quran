@@ -24,10 +24,35 @@ class QuranData {
   /// the second part is the ayah number
   ///
   /// value: is the object of the ayah
-  Map<String, dynamic> quranMap = {
+  static const Map<String, dynamic> quranMap = {
     '1:1': {
       'text': 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-      'sajda': false,
+      'page': 1,
+    },
+    '1:2': {
+      'text': 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
+      'page': 1,
+    },
+    '1:3': {
+      'text': 'الرَّحْمَٰنِ الرَّحِيمِ',
+      'page': 1,
+    },
+    '1:4': {
+      'text': 'مَالِكِ يَوْمِ الدِّينِ',
+      'page': 1,
+    },
+    '1:5': {
+      'text': 'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',
+      'page': 1,
+    },
+    '1:6': {
+      'text': 'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+      'page': 1,
+    },
+    '1:7': {
+      'text':
+          'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
+      'page': 1,
     },
   };
 
@@ -41,7 +66,11 @@ class QuranData {
   ///  example: ```dart
   /// {"surah": 1, "start": 1, "end": 7},}
   /// ```
-  Map<String, dynamic> pageMap = {};
+  static const Map<String, dynamic> pageMap = {
+    '1': [
+      {'surah': 1, 'start': 1, 'end': 7},
+    ],
+  };
 
   /// [juzMap] is a map that contains the mapping of the juz
   ///
@@ -68,14 +97,14 @@ class QuranData {
   ///       '9': {'start': 93, 'end': 129},
   ///     },
   ///   },```
-  Map<String, dynamic> juzMap = {};
+  static const Map<String, dynamic> juzMap = {};
 
   /// [sajdaMap] is a map that contains the mapping of the sajda
   ///
   /// key: is the surah number
   ///
   /// value: is a verse number
-  Map<String, dynamic> sajdaMap = {};
+  static const Map<String, dynamic> sajdaMap = {};
 
   /// [suraMap] is a map that contains the mapping of the surah
   ///
@@ -86,7 +115,7 @@ class QuranData {
   /// value: is a map of keys and values
   ///
   /// values of the sub-map: [id, name, aya, page, arabic]
-  Map<String, dynamic> suraMap = {
+  static const Map<String, dynamic> suraMap = {
     '1': {
       'id': 1,
       'name': 'الفاتحة',
